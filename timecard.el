@@ -78,7 +78,7 @@ Here is the complete list of key bindings for this mode:
 
   ;; SECONDS is the number of seconds attributed to the frob, as a
   ;; floating-point number.
-  seconds 
+  seconds
 
   ;; START is nil for an inactive frob; for the active frob, it is the
   ;; time at which the frob last became active, as a floating-point
@@ -118,7 +118,7 @@ See `timecard-parse-frob' for details."
         (minutes (match-string 2))
         (seconds (match-string 3))
         (start (match-string 4)))
-    (make-timecard-frob 
+    (make-timecard-frob
      :seconds (+ (string-to-number seconds)
                  (* 60 (+ (string-to-number minutes)
                           (* 60 (string-to-number hours)))))
@@ -163,7 +163,7 @@ REGION is a pair (START . END)."
 
 (defun timecard-rewrite-frob (frob)
   "Rewrite FROB as appropriate for its current SECONDS value."
-  (save-excursion 
+  (save-excursion
     (let ((seconds (timecard-frob-seconds frob))
           (start (timecard-frob-start frob))
           (frob-region (timecard-frob-frob-region frob))
@@ -186,9 +186,9 @@ REGION is a pair (START . END)."
           (progn
             (put-text-property frob-start frob-end
                                'category 'timecard-frob-active)
-            (put-text-property start-start start-end 
+            (put-text-property start-start start-end
                                'category 'timecard-frob-start)
-            (setf (timecard-frob-start-region frob) 
+            (setf (timecard-frob-start-region frob)
                   (cons start-start start-end)))))))
 
 (defun timecard-current-time ()
@@ -250,7 +250,7 @@ REGION is a pair (START . END)."
          (save-excursion
            (goto-char pos)
            (timecard-parse-frob)))))
-                   
+
 (defun timecard-frob-at-point ()
   "Return the frob at or before point.
 Raise an error if there is none."
@@ -336,8 +336,8 @@ alist of estimate totals, whose keys are symbols."
           (if start
               (incf total (- (timecard-current-time) start)))
           (goto-char (cdr region))))
-      
-      ;; Total up times appearing in parens.  
+
+      ;; Total up times appearing in parens.
       (goto-char start)
       (while (re-search-forward timecard-estimate-regexp end t)
         (let ((category-time (timecard-parse-matched-estimate)))
