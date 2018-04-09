@@ -65,6 +65,7 @@ Here is the complete list of key bindings for this mode:
     (define-key map "\C-c\C-t" 'timecard-total-region)
     (define-key map "\C-c\C-p" 'timecard-total-page)
     (define-key map "\C-c\C-h" 'timecard-total-headline)
+    (define-key map "\C-c\C-s" 'timecard-steal-time)
     (define-key map [M-tab] 'timecard-complete-task-name)
     map)
   "Keymap for timecard-code.")
@@ -398,5 +399,34 @@ An Org-style headline is any line starting with one or more '*' characters."
   (interactive)
   ...)
 
-                 
+(defun timecard-read-duration (prompt)
+  "Read a time duration from the minibuffer, return as a number of seconds.
+A plain number is taken as the number of minutes; two numbers
+separated by a colon are taken as hours and minutes."
+  (let ((dur (read-string prompt nil nil 0)))
+    (cond
+     ((numberp dur) dur)
+     ((string-match "\\`\\s-*\\([0-9]+\\):\\([0-9]+\\)\\s-*\\'" dur)
+      (float (+ (* 3600 (string-to-number (match-string 1 dur)))
+                (* 60 (string-to-number (match-string 2 dur))))))
+     (t (float (* 60 (string-to-int dur)))))))
+
+(defun timecard-steal-time (this active duration)
+  "Steal time from the task before point, and add it to the active frob.
+This is useful for distractions, or when you only realize that
+you've switched tasks after you've already been doing the new
+thing for a while.
+Prompt for the amount of time to steal. A plain number is taken
+as the number of minutes; two numbers separated by a colon are
+taken as hours and minutes."
+  (interactive
+   (list
+    (timecard-frob-at-point)
+    (timecard-active-frob)
+    (timecard-read-duration "Time to steal (minutes or min:sec): ")))
+  (decf (timecard-frob-seconds this) duration)
+  (incf (timecard-frob-seconds active) duration)
+  (timecard-rewrite-frob this)
+  (timecard-rewrite-frob active))
+
 (provide 'timecard)
