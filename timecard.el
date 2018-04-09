@@ -212,13 +212,6 @@ REGION is a pair (START . END)."
         (setf (timecard-frob-start frob) nil)
         (timecard-rewrite-frob frob))))
 
-(defmacro while: (var cond &rest body)
-  "Like while, but bind VAR to the condition's value while evaluating BODY..."
-  `(let (,var)
-     (while (setq ,var ,cond)
-       ,@body)))
-(put 'while: 'lisp-indent-function 2)
-
 (defun timecard-mark-up-active-frobs ()
   "Apply appropriate markup to any active frobs in the current buffer."
   (save-excursion
