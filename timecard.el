@@ -423,7 +423,7 @@ taken as hours and minutes."
    (list
     (timecard-frob-at-point)
     (timecard-active-frob)
-    (timecard-read-duration "Time to steal (minutes or min:sec): ")))
+    (timecard-read-duration "Time to steal (minutes or hours:minutes): ")))
   (decf (timecard-frob-seconds this) duration)
   (incf (timecard-frob-seconds active) duration)
   (timecard-rewrite-frob this)
